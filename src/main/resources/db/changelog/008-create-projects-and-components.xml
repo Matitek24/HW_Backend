@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- 008 - projekt_czapki + czapka_dol/gora/srodek + pompon + FKs + UNIQUE (id_projekt) -->
+    <changeSet id="008-create-projects-and-components" author="admin.hw">
+
+        <!-- projekt_czapki -->
+        <createTable tableName="projekt_czapki">
+            <column name="id_projekt" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="nazwa_projektu" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="wizualizacja" type="VARCHAR(1024)"/>
+
+            <column name="id_uzytkownik" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_klient" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_typu" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- FK: projekt -> uzytkownik, klient, typ_czapki -->
+        <addForeignKeyConstraint
+                baseTableName="projekt_czapki"
+                baseColumnNames="id_uzytkownik"
+                referencedTableName="uzytkownik"
+                referencedColumnNames="id_uzytkownik"
+                constraintName="fk_projekt_uzytkownik"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="projekt_czapki"
+                baseColumnNames="id_klient"
+                referencedTableName="klient"
+                referencedColumnNames="id_klient"
+                constraintName="fk_projekt_klient"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="projekt_czapki"
+                baseColumnNames="id_typu"
+                referencedTableName="typ_czapki"
+                referencedColumnNames="id_typu"
+                constraintName="fk_projekt_typ_czapki"
+                onDelete="RESTRICT"/>
+
+        <!-- czapka_dol -->
+        <createTable tableName="czapka_dol">
+            <column name="id_dol" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="id_projekt" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_kolor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="czy_logotyp" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- czapka_gora -->
+        <createTable tableName="czapka_gora">
+            <column name="id_gora" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="id_projekt" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_wzor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_kolor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_kolor_wzoru" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- czapka_srodek -->
+        <createTable tableName="czapka_srodek">
+            <column name="id_srodek" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="id_projekt" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_wzor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_kolor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_czcionki" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_rozmiaru_czcionki" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_kolor_wzoru" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- pompon -->
+        <createTable tableName="pompon">
+            <column name="id_pompon" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="liczba_nici" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_projekt" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_kolor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Dodanie FK dla komponentów -->
+        <addForeignKeyConstraint
+                baseTableName="czapka_dol"
+                baseColumnNames="id_projekt"
+                referencedTableName="projekt_czapki"
+                referencedColumnNames="id_projekt"
+                constraintName="fk_czapka_dol_projekt"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_dol"
+                baseColumnNames="id_kolor"
+                referencedTableName="kolor"
+                referencedColumnNames="id_kolor"
+                constraintName="fk_czapka_dol_kolor"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_gora"
+                baseColumnNames="id_projekt"
+                referencedTableName="projekt_czapki"
+                referencedColumnNames="id_projekt"
+                constraintName="fk_czapka_gora_projekt"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_gora"
+                baseColumnNames="id_wzor"
+                referencedTableName="wzor"
+                referencedColumnNames="id_wzor"
+                constraintName="fk_czapka_gora_wzor"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_gora"
+                baseColumnNames="id_kolor"
+                referencedTableName="kolor"
+                referencedColumnNames="id_kolor"
+                constraintName="fk_czapka_gora_kolor"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_gora"
+                baseColumnNames="id_kolor_wzoru"
+                referencedTableName="kolor"
+                referencedColumnNames="id_kolor"
+                constraintName="fk_czapka_gora_kolor_wzoru"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_srodek"
+                baseColumnNames="id_projekt"
+                referencedTableName="projekt_czapki"
+                referencedColumnNames="id_projekt"
+                constraintName="fk_czapka_srodek_projekt"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_srodek"
+                baseColumnNames="id_wzor"
+                referencedTableName="wzor"
+                referencedColumnNames="id_wzor"
+                constraintName="fk_czapka_srodek_wzor"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_srodek"
+                baseColumnNames="id_kolor"
+                referencedTableName="kolor"
+                referencedColumnNames="id_kolor"
+                constraintName="fk_czapka_srodek_kolor"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_srodek"
+                baseColumnNames="id_czcionki"
+                referencedTableName="czcionka"
+                referencedColumnNames="id_czcionki"
+                constraintName="fk_czapka_srodek_czcionka"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_srodek"
+                baseColumnNames="id_rozmiaru_czcionki"
+                referencedTableName="rozmiar_czcionki"
+                referencedColumnNames="id_rozmiaru_czcionki"
+                constraintName="fk_czapka_srodek_rozmiar"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="czapka_srodek"
+                baseColumnNames="id_kolor_wzoru"
+                referencedTableName="kolor"
+                referencedColumnNames="id_kolor"
+                constraintName="fk_czapka_srodek_kolor_wzoru"
+                onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="pompon"
+                baseColumnNames="id_projekt"
+                referencedTableName="projekt_czapki"
+                referencedColumnNames="id_projekt"
+                constraintName="fk_pompon_projekt"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="pompon"
+                baseColumnNames="id_kolor"
+                referencedTableName="kolor"
+                referencedColumnNames="id_kolor"
+                constraintName="fk_pompon_kolor"
+                onDelete="RESTRICT"/>
+
+        <!-- Dodanie UNIQUE na id_projekt żeby wymusić 1:1 -->
+        <addUniqueConstraint tableName="czapka_dol" columnNames="id_projekt" constraintName="uk_czapka_dol_id_projekt"/>
+        <addUniqueConstraint tableName="czapka_gora" columnNames="id_projekt" constraintName="uk_czapka_gora_id_projekt"/>
+        <addUniqueConstraint tableName="czapka_srodek" columnNames="id_projekt" constraintName="uk_czapka_srodek_id_projekt"/>
+        <addUniqueConstraint tableName="pompon" columnNames="id_projekt" constraintName="uk_pompon_id_projekt"/>
+
+    </changeSet>
+</databaseChangeLog>

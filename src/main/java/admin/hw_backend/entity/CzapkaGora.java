@@ -7,25 +7,33 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name="uzytkownik")
+@Table(name = "czapka_gora")
 @Getter
 @Setter
-public class User {
+public class CzapkaGora {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_uzytkownik")
+    @Column(name = "id_gora")
     private Long id;
 
-    @Column(name = "email", length = 128, nullable = false, unique = true)
-    private String email;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_projekt", nullable = false, unique = true)
+    private ProjektCzapki projekt;
 
-    @Column(name = "haslo_hash", nullable = false)
-    private String haslo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_wzor", nullable = false)
+    private Wzor wzor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_kolor", nullable = false)
+    private Kolor kolor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_kolor_wzoru", nullable = false)
+    private Kolor kolorWzoru;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -34,13 +42,4 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "uzytkownik_rola",
-            joinColumns = @JoinColumn(name = "id_uzytkownik"),
-            inverseJoinColumns = @JoinColumn(name = "id_rola")
-    )
-    private Set<Role> role = new HashSet<>();
-
 }

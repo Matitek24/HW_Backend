@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="009-create-timestamp-trigger" author="admin.hw">
+
+        <comment>Funkcja trigger_set_timestamp() i przypięcie triggerów BEFORE UPDATE dla tabel z created_at/updated_at</comment>
+
+        <!-- ✅ Używamy splitStatements=false, by nie przerywało $$ -->
+        <sql splitStatements="false" stripComments="false">
+            CREATE OR REPLACE FUNCTION trigger_set_timestamp()
+            RETURNS TRIGGER AS $$
+            BEGIN
+              NEW.updated_at = NOW();
+            RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+
+        <!-- ✅ Triggery dla każdej tabeli -->
+        <sql>CREATE TRIGGER set_timestamp_rola BEFORE UPDATE ON rola FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_uzytkownik BEFORE UPDATE ON uzytkownik FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_klient BEFORE UPDATE ON klient FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_zaproszenie BEFORE UPDATE ON zaproszenie FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_typ_czapki BEFORE UPDATE ON typ_czapki FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_kolor BEFORE UPDATE ON kolor FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_wzor BEFORE UPDATE ON wzor FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_czcionka BEFORE UPDATE ON czcionka FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_rozmiar_czcionki BEFORE UPDATE ON rozmiar_czcionki FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_projekt_czapki BEFORE UPDATE ON projekt_czapki FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_czapka_dol BEFORE UPDATE ON czapka_dol FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_czapka_gora BEFORE UPDATE ON czapka_gora FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_czapka_srodek BEFORE UPDATE ON czapka_srodek FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+        <sql>CREATE TRIGGER set_timestamp_pompon BEFORE UPDATE ON pompon FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();</sql>
+
+    </changeSet>
+</databaseChangeLog>

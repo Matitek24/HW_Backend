@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- Tabela pośrednia: uzytkownik_rola -->
+    <changeSet id="003-create-uzytkownik-rola-table" author="admin.hw">
+        <createTable tableName="uzytkownik_rola">
+            <column name="id_uzytkownik" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_rola" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Klucze obce -->
+        <addForeignKeyConstraint
+                baseTableName="uzytkownik_rola"
+                baseColumnNames="id_uzytkownik"
+                referencedTableName="uzytkownik"
+                referencedColumnNames="id_uzytkownik"
+                constraintName="fk_uzytkownik_rola_uzytkownik"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="uzytkownik_rola"
+                baseColumnNames="id_rola"
+                referencedTableName="rola"
+                referencedColumnNames="id_rola"
+                constraintName="fk_uzytkownik_rola_rola"
+                onDelete="CASCADE"/>
+
+        <!-- Unikalność pary użytkownik + rola -->
+        <addUniqueConstraint
+                tableName="uzytkownik_rola"
+                columnNames="id_uzytkownik, id_rola"
+                constraintName="uk_uzytkownik_rola_pair"/>
+    </changeSet>
+
+
+</databaseChangeLog>

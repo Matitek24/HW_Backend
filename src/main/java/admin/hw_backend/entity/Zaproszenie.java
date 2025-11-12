@@ -7,25 +7,28 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name="uzytkownik")
+@Table(name = "zaproszenie")
 @Getter
 @Setter
-public class User {
+public class Zaproszenie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_uzytkownik")
+    @Column(name = "id_zaproszenia")
     private Long id;
 
-    @Column(name = "email", length = 128, nullable = false, unique = true)
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_klient", nullable = false)
+    private Klient klient;
 
-    @Column(name = "haslo_hash", nullable = false)
-    private String haslo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_uzytkownik", nullable = false)
+    private User uzytkownik;
+
+    @Column(name = "informacje_dodatkowe")
+    private String informacjeDodatkowe;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -34,13 +37,4 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "uzytkownik_rola",
-            joinColumns = @JoinColumn(name = "id_uzytkownik"),
-            inverseJoinColumns = @JoinColumn(name = "id_rola")
-    )
-    private Set<Role> role = new HashSet<>();
-
 }
