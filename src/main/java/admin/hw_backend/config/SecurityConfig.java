@@ -1,9 +1,10 @@
 package admin.hw_backend.config;
 
-import admin.hw_backend.security.JwtAuthenticationFilter; // Nowy import
+import admin.hw_backend.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,22 +31,19 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(withDefaults())
-
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // WAŻNE: Bezstanowa sesja
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/api/auth/register",
-                                "/api/auth/login", // Otwieramy endpoint logowania
-                                "/api/public/**",
+                                "/api/auth/login",
+                                "/api/public/roles",
                                 "/"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );
 
-        // DODANIE FILTRA JWT PRZED FILTREM AUTORYZACJI UŻYTKOWNIKA I HASŁA
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 
@@ -56,14 +54,16 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // Zastosuj do wszystkich ścieżek
-                        .allowedOrigins("http://localhost:5173") // JEDYNIE Twój frontend Vue
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Dozwolone metody HTTP
-                        .allowedHeaders("*") // Wszystkie nagłówki (w tym Content-Type i Authorization)
-                        .allowCredentials(true); // Wymagane, jeśli używasz ciasteczek/sesji (dla JWT nie zawsze)
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:5173")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true)
+                        .maxAge(3600);
             }
         };
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

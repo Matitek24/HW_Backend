@@ -33,10 +33,8 @@ public class AuthController {
         }
     }
 
-    // --- NOWY ENDPOINT DLA LOGOWANIA ---
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        // 1. Uwierzytelnienie użytkownika przez Spring Security
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -44,13 +42,10 @@ public class AuthController {
                 )
         );
 
-        // 2. Ustawienie obiektu Authentication w kontekście bezpieczeństwa
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // 3. Generowanie tokenu JWT
         String token = jwtTokenProvider.generateToken(authentication);
 
-        // 4. Zwrócenie tokenu w odpowiedzi
         return ResponseEntity.ok(new LoginResponse(token, loginRequest.getEmail()));
     }
 }

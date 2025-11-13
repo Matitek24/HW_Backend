@@ -1,10 +1,9 @@
 package admin.hw_backend.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
@@ -16,13 +15,13 @@ import static io.jsonwebtoken.Jwts.parser;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class JwtTokenProvider {
 
-    // Token musi być tajny (Secret Key)
-    // Zostanie on pobrany z pliku application.properties
     @Value("${app.jwt-secret}")
     private String jwtSecret;
 
@@ -75,8 +74,15 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (Exception ex) {
-            throw new AuthenticationCredentialsNotFoundException("JWT jest nieprawidłowy lub wygasł", ex);
+        } catch (MalformedJwtException ex) {
+            log.error("Nieprawidłowy token JWT: {}", ex.getMessage());
+        } catch (ExpiredJwtException ex) {
+            log.error("Token JWT wygasł: {}", ex.getMessage());
+        } catch (UnsupportedJwtException ex) {
+            log.error("Token JWT nie jest wspierany: {}", ex.getMessage());
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string jest pusty: {}", ex.getMessage());
         }
+        return false;
     }
 }
