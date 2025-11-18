@@ -21,7 +21,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider; // Wstrzykujemy provider JWT
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody RegisterRequest request) {

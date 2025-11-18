@@ -18,25 +18,20 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public User registerUser(RegisterRequest request) {
-    // Metoda do rejestracji
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email jest już zajęty!");
         }
 
-        // 1. Stwórz nowego użytkownika
         User user = new User();
         user.setEmail(request.getEmail());
 
-        // 2. HASZOWANIE HASŁA!
         user.setHaslo(passwordEncoder.encode(request.getHaslo()));
 
-        // 3. Przypisz domyślną rolę (np. USER)
         Role userRole = roleRepository.findByNazwaRoli("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono roli 'ROLE_USER'"));
 
         user.getRole().add(userRole);
 
-        // 4. Zapisz w bazie
         return userRepository.save(user);
     }
 
