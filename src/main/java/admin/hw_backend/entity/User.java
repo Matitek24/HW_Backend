@@ -34,6 +34,11 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry_date")
+    private OffsetDateTime resetTokenExpiryDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -41,6 +46,7 @@ public class User {
             joinColumns = @JoinColumn(name = "id_uzytkownik"),
             inverseJoinColumns = @JoinColumn(name = "id_rola")
     )
+
     private Set<Role> role = new HashSet<>();
 
 }
