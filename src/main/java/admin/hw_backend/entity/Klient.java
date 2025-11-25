@@ -21,23 +21,27 @@ public class Klient {
     @Column(name = "id_klient")
     private Long id;
 
-    @Column(name = "token", nullable = false, unique = true)
-    private String token;
+    @Column(nullable = false)
+    private String email;
 
-    @Column(name = "czy_aktywny", nullable = false)
-    private boolean czyAktywny = true;
+    @Column(name = "imie_nazwisko")
+    private String imieNazwisko;
+
+    private String firma;
+    private String telefon;
+    private String uwagi;
+
+    @Column(name = "zgoda_rodo")
+    private boolean zgodaRodo;
 
     @OneToMany(mappedBy = "klient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProjektCzapki> projekty = new ArrayList<>();
-
-    @OneToMany(mappedBy = "klient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Zaproszenie> zaproszenia = new ArrayList<>();
+    private List<Projekt> projekty = new ArrayList<>();
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 }

@@ -3,13 +3,9 @@ package admin.hw_backend.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "kolor")
+@Table(name = "slownik_kolor")
 @Getter
 @Setter
 public class Kolor {
@@ -19,17 +15,12 @@ public class Kolor {
     @Column(name = "id_kolor")
     private Long id;
 
-    @Column(name = "nazwa", nullable = false)
+    @Column(nullable = false)
     private String nazwa;
 
-    @Column(name = "hex_koloru", nullable = false, columnDefinition = "CHAR(7)")
-    private String hexKoloru;
+    @Column(nullable = false, length = 7)
+    private String hex; // np. #FFFFFF
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
+    // Opcjonalnie: typ (np. "POMPON", "PRZEDZA"), jeśli chcesz filtrować
+    // private String typ;
 }

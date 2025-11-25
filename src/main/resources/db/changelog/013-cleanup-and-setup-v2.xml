@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="013-01-drop-old-structure" author="admin">
+        <dropTable tableName="czapka_dol" cascadeConstraints="true"/>
+        <dropTable tableName="czapka_gora" cascadeConstraints="true"/>
+        <dropTable tableName="czapka_srodek" cascadeConstraints="true"/>
+        <dropTable tableName="pompon" cascadeConstraints="true"/>
+        <dropTable tableName="rozmiar_czcionki" cascadeConstraints="true"/>
+        <dropTable tableName="typ_czapki" cascadeConstraints="true"/>
+        <dropTable tableName="projekt_czapki" cascadeConstraints="true"/>
+        <dropTable tableName="zaproszenie" cascadeConstraints="true"/>
+
+        <dropTable tableName="wzor" cascadeConstraints="true"/>
+        <dropTable tableName="kolor" cascadeConstraints="true"/>
+        <dropTable tableName="czcionka" cascadeConstraints="true"/>
+
+        <dropTable tableName="klient" cascadeConstraints="true"/>
+    </changeSet>
+
+    <changeSet id="013-02-create-dictionaries" author="admin">
+
+        <createTable tableName="slownik_kolor">
+            <column name="id_kolor" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nazwa" type="VARCHAR(255)"><constraints nullable="false"/></column>
+            <column name="hex" type="VARCHAR(7)"><constraints nullable="false"/></column>
+            <column name="typ" type="VARCHAR(50)"/>
+        </createTable>
+
+        <createTable tableName="slownik_czcionka">
+            <column name="id_czcionka" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nazwa" type="VARCHAR(255)"><constraints nullable="false"/></column>
+            <column name="wartosc" type="VARCHAR(255)"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="slownik_wzor">
+            <column name="id_wzor" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nazwa" type="VARCHAR(255)"><constraints nullable="false"/></column>
+            <column name="kod_svg" type="TEXT"><constraints nullable="false"/></column>
+            <column name="kategoria" type="VARCHAR(50)"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="013-03-create-business-tables" author="admin">
+
+        <createTable tableName="klient">
+            <column name="id_klient" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="imie_nazwisko" type="VARCHAR(255)"/> <column name="firma" type="VARCHAR(255)"/> <column name="telefon" type="VARCHAR(50)"/> <column name="uwagi" type="VARCHAR(255)"/> <column name="zgoda_rodo" type="BOOLEAN" defaultValue="false"/>
+
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+
+        <createTable tableName="projekt">
+            <column name="id_projekt" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="id_klient" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_projekt_klient" references="klient(id_klient)"/>
+            </column>
+
+            <column name="konfiguracja_json" type="JSONB">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(50)" defaultValue="NOWY">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="miniaturka_url" type="VARCHAR(512)"/>
+            <column name="token_edycji" type="VARCHAR(255)"><constraints nullable="false"/></column>
+            <column name="ilosc_sztuk" type="INTEGER"/>
+            <column name="uwagi_klienta" type="TEXT"/>
+
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

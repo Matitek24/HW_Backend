@@ -3,13 +3,9 @@ package admin.hw_backend.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "wzor")
+@Table(name = "slownik_wzor")
 @Getter
 @Setter
 public class Wzor {
@@ -19,20 +15,13 @@ public class Wzor {
     @Column(name = "id_wzor")
     private Long id;
 
-    @Column(name = "nazwa", nullable = false)
+    @Column(nullable = false)
     private String nazwa;
 
-    @Column(name = "miniaturka", nullable = false)
-    private String miniaturka;
+    @Lob // Informuje Hibernate, że to jest duży tekst (CLOB/TEXT)
+    @Column(name = "kod_svg", nullable = false, columnDefinition = "TEXT")
+    private String kodSvg;
 
-    @Column(name = "svg_code", nullable = false, columnDefinition = "TEXT")
-    private String svgCode;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
+    @Column(nullable = false)
+    private String kategoria; // Wartości: 'GORA', 'DOL', 'SRODEK' (wg Twojego ERD i specyfikacji)
 }

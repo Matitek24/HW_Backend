@@ -3,30 +3,21 @@ package admin.hw_backend.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "czcionka")
+@Table(name = "slownik_czcionka")
 @Getter
 @Setter
 public class Czcionka {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_czcionki")
+    @Column(name = "id_czcionka")
     private Long id;
 
-    @Column(name = "nazwa", nullable = false)
+    @Column(nullable = false)
     private String nazwa;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
+    @Column(nullable = false)
+    private String wartosc; // Np. nazwa pliku albo rodzina czcionki w CSS
 }

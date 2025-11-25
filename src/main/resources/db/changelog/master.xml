@@ -17,6 +17,7 @@
     <include file="db/changelog/010-fix-hex-koloru-type.xml"/>
     <include file="db/changelog/011-insert-roles.xml"/>
     <include file="db/changelog/012-add-reset-token-columns.xml"/>
+    <include file="db/changelog/013-cleanup-and-setup-v2.xml"/>
 
 
 
