@@ -19,5 +19,5 @@ public class Czcionka {
     private String nazwa;
 
     @Column(nullable = false)
-    private String wartosc; // Np. nazwa pliku albo rodzina czcionki w CSS
+    private String wartosc;
 }

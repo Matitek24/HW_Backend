@@ -42,17 +42,12 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/register-admin",
                                 "/api/public/**",
-                                "api/auth/forgot-password",
+                                "/api/auth/forgot-password",
                                 "/api/auth/reset-password",
                                 "/"
                         ).permitAll()
-
-
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
-
                         .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
-
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception

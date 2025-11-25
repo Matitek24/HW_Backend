@@ -18,10 +18,12 @@ public class Wzor {
     @Column(nullable = false)
     private String nazwa;
 
-    @Lob // Informuje Hibernate, że to jest duży tekst (CLOB/TEXT)
+    // Usuwamy @Lob. Hibernate 6+ w Postgresie świetnie radzi sobie z TEXT bez tego.
     @Column(name = "kod_svg", nullable = false, columnDefinition = "TEXT")
     private String kodSvg;
 
     @Column(nullable = false)
-    private String kategoria; // Wartości: 'GORA', 'DOL', 'SRODEK' (wg Twojego ERD i specyfikacji)
+    private String kategoria;
+
+    public Wzor() {}
 }
