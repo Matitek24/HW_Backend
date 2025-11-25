@@ -2,10 +2,12 @@ package admin.hw_backend.model.json;
 
 import lombok.Data;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class HatConfiguration implements Serializable {
-    // Odzwierciedla strukturę JSON z frontendu
+
+    private static final long serialVersionUID = 1L; // Dobra praktyka
 
     private TextConfig text;
     private BaseConfig base;
@@ -13,8 +15,10 @@ public class HatConfiguration implements Serializable {
     private PomponConfig pompons;
     private PatternsSelection patterns;
 
+
     @Data
-    public static class TextConfig {
+    public static class TextConfig implements Serializable {
+        private static final long serialVersionUID = 1L;
         private String content;
         private String color;
         private String font;
@@ -22,20 +26,23 @@ public class HatConfiguration implements Serializable {
     }
 
     @Data
-    public static class BaseConfig {
-        private String top;     // hex
-        private String middle;  // hex
-        private String bottom;  // hex
+    public static class BaseConfig implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private String top;
+        private String middle;
+        private String bottom;
     }
 
     @Data
-    public static class PatternConfig {
-        private String main; // kolor wzoru głównego
-        private String top;  // kolor wzoru górnego
+    public static class PatternConfig implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private String main;
+        private String top;
     }
 
     @Data
-    public static class PomponConfig {
+    public static class PomponConfig implements Serializable {
+        private static final long serialVersionUID = 1L;
         private String p1;
         private String p2;
         private String p3;
@@ -43,8 +50,9 @@ public class HatConfiguration implements Serializable {
     }
 
     @Data
-    public static class PatternsSelection {
-        private String top;    // nazwa pliku svg ze słownika
-        private String bottom; // nazwa pliku svg ze słownika
+    public static class PatternsSelection implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private Long top;
+        private Long bottom;
     }
 }

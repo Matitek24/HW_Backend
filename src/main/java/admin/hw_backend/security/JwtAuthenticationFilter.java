@@ -27,28 +27,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        try {
 
-        // 1. Pobierz JWT z nagłówka żądania
-        String token = getJwtFromRequest(request);
+            String token = getJwtFromRequest(request);
 
-        // 2. Walidacja tokenu i ustawienie kontekstu bezpieczeństwa
-        if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
-            // Pobierz email z tokenu
-            String username = tokenProvider.getUsernameFromToken(token);
+            if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
 
-            // Załaduj dane użytkownika
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                String username = tokenProvider.getUsernameFromToken(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            // Stwórz obiekt uwierzytelnienia
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
-            );
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            // Ustaw uwierzytelnienie w kontekście Spring Security
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception ex) {
+            logger.error("Could not set user authentication in security context", ex);
         }
 
         filterChain.doFilter(request, response);

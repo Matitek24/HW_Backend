@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 "/api/public/**",
                                 "/api/auth/forgot-password",
                                 "/api/auth/reset-password",
+                                "/api/public/project",
                                 "/"
                         ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
