@@ -1,9 +1,9 @@
 package admin.hw_backend.controller;
 
-import admin.hw_backend.dto.LoginRequest; // Nowy import
-import admin.hw_backend.dto.LoginResponse; // Nowy import
+import admin.hw_backend.dto.LoginRequest;
+import admin.hw_backend.dto.LoginResponse;
 import admin.hw_backend.dto.RegisterRequest;
-import admin.hw_backend.security.JwtTokenProvider; // Nowy import
+import admin.hw_backend.security.JwtTokenProvider;
 import admin.hw_backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,6 @@ public class AuthController {
     public ResponseEntity<String> registerUser(@RequestBody RegisterRequest request) {
         try {
             request.setRola(null);
-
             authService.registerUser(request);
             return new ResponseEntity<>("Użytkownik zarejestrowany pomyślnie!", HttpStatus.CREATED);
         } catch (RuntimeException e) {
