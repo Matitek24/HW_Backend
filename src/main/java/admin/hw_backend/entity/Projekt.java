@@ -1,6 +1,7 @@
 package admin.hw_backend.entity;
 
 import admin.hw_backend.model.json.HatConfiguration;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Table(name = "projekt")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Projekt {
 
     @Id

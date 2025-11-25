@@ -1,5 +1,7 @@
 package admin.hw_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +16,7 @@ import java.util.List;
 @Table(name = "klient")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Klient {
 
     @Id
@@ -35,6 +38,7 @@ public class Klient {
     private boolean zgodaRodo;
 
     @OneToMany(mappedBy = "klient", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Projekt> projekty = new ArrayList<>();
 
     @CreationTimestamp
