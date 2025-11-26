@@ -1,5 +1,6 @@
 package admin.hw_backend.controller;
 
+import admin.hw_backend.dto.ProjectPublicResponse;
 import admin.hw_backend.dto.ProjectRequest;
 import admin.hw_backend.model.json.HatConfiguration;
 import admin.hw_backend.repository.ProjektRepository;
@@ -33,10 +34,19 @@ public class ProjectController {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<HatConfiguration> getProjectConfig(@PathVariable UUID uuid) {
+    public ResponseEntity<ProjectPublicResponse> getProjectConfig(@PathVariable UUID uuid) {
         return projektRepository.findById(uuid)
-                .map(Projekt::getKonfiguracja)
+                .map(projekt -> new ProjectPublicResponse(
+                        projekt.getStatus(),       // Wyciągamy status
+                        projekt.getKonfiguracja()  // Wyciągamy JSONa
+                ))
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Projekt nie istnieje"));
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<?> updateProject(@PathVariable UUID uuid, @RequestBody ProjectRequest request) {
+        projectService.updateProject(uuid, request);
+        return ResponseEntity.ok(Map.of("message", "Projekt zaktualizowany pomyślnie!"));
     }
 }
