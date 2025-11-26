@@ -29,7 +29,6 @@ public class Projekt {
     @JoinColumn(name = "id_klient", nullable = false)
     private Klient klient;
 
-    // --- KLUCZOWE: Mapowanie JSON ---
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "konfiguracja_json", columnDefinition = "jsonb")
     private HatConfiguration konfiguracja;

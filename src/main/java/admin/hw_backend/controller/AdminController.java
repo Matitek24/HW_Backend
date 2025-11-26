@@ -18,12 +18,9 @@ public class AdminController {
 
     private final ProjektRepository projektRepository;
 
-    // Endpoint dostępny tylko dla ADMINA
     @GetMapping("/projects")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Projekt>> getAllProjects() {
-        // Pobieramy wszystkie projekty, sortując od najnowszych
-        // Warto dodać metodę findAllByOrderByCreatedAtDesc() w repozytorium
-        return ResponseEntity.ok(projektRepository.findAllByOrderByCreatedAtDesc());
+        return ResponseEntity.ok(projektRepository.findAllWithKlient());
     }
 }
