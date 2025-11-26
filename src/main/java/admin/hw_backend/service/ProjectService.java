@@ -19,6 +19,7 @@ public class ProjectService {
 
     private final KlientRepository klientRepository;
     private final ProjektRepository projektRepository;
+    private final EmailService emailService;
 
     @Transactional
     public UUID createProject(ProjectRequest request) {
@@ -47,6 +48,12 @@ public class ProjectService {
         projekt.setTokenEdycji(UUID.randomUUID().toString());
 
         projekt = projektRepository.save(projekt);
+
+        emailService.sendProjectConfirmation(
+                request.getEmail(),
+                request.getImieNazwisko(),
+                projekt.getId()
+        );
 
         return projekt.getId();
     }
