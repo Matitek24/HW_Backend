@@ -23,6 +23,7 @@ public class HatConfiguration implements Serializable {
         private String color;
         private String font;
         private Integer fontSize;
+        private Integer offsetY;
     }
 
     @Data
