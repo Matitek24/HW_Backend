@@ -25,11 +25,9 @@ public class JwtTokenProvider {
     @Value("${app.jwt-secret}")
     private String jwtSecret;
 
-    // Czas życia tokenu (np. 7 dni)
     @Value("${app.jwt-expiration-milliseconds}")
     private long jwtExpirationDate;
 
-    // --- 1. Generowanie Tokenu ---
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         Date currentDate = new Date();
@@ -41,11 +39,11 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
 
         String token = Jwts.builder()
-                .setSubject(username) // Zazwyczaj email użytkownika
-                .claim("roles", roles) // Dodanie ról jako niestandardowy claim
+                .setSubject(username)
+                .claim("roles", roles)
                 .setIssuedAt(currentDate)
                 .setExpiration(expireDate)
-                .signWith(key(), SignatureAlgorithm.HS512) // Podpisanie kluczem
+                .signWith(key(), SignatureAlgorithm.HS512)
                 .compact();
 
         return token;
@@ -55,7 +53,6 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
-    // --- 2. Pobieranie Emaila z Tokenu ---
     public String getUsernameFromToken(String token) {
         Claims claims = parser()
                 .setSigningKey(key())
@@ -66,7 +63,6 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    // --- 3. Walidacja Tokenu ---
     public boolean validateToken(String token) {
         try {
             parser()

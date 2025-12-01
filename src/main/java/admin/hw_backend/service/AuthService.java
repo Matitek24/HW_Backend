@@ -23,15 +23,14 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Transactional
     public User registerUser(RegisterRequest request) {
-        // Sprawdź czy email nie jest zajęty
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email jest już zajęty!");
         }
 
-        // Stwórz nowego usera
         User user = new User();
         user.setEmail(request.getEmail());
         user.setHaslo(passwordEncoder.encode(request.getHaslo()));
@@ -54,25 +53,15 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika o takim emailu"));
 
-        // Generujemy losowy token
         String token = UUID.randomUUID().toString();
 
-        // Ustawiamy token i czas wygaśnięcia (np. 15 minut)
         user.setResetToken(token);
         user.setResetTokenExpiryDate(OffsetDateTime.now().plusMinutes(15));
 
         userRepository.save(user);
 
-        // TUTAJ WYSYŁKA EMAILA
-        // Na razie dla testów zróbmy to w konsoli, żebyś nie musiał konfigurować SMTP od razu
-        String resetLink = "http://localhost:5173/reset-password?token=" + token;
+        emailService.sendPasswordResetLink(email, token);
 
-        System.out.println("--- EMAIL SYMULACJA ---");
-        System.out.println("Wyślij to na email: " + email);
-        System.out.println("Link do resetu: " + resetLink);
-        System.out.println("-----------------------");
-
-        // Docelowo tutaj użyjesz JavaMailSender do wysłania prawdziwego maila
     }
 
     @Transactional
@@ -80,15 +69,11 @@ public class AuthService {
         User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Nieprawidłowy token"));
 
-        // Sprawdź czy token nie wygasł
         if (user.getResetTokenExpiryDate().isBefore(OffsetDateTime.now())) {
             throw new RuntimeException("Token wygasł!");
         }
 
-        // Zmień hasło
         user.setHaslo(passwordEncoder.encode(newPassword));
-
-        // Wyczyść token, żeby nie można go było użyć drugi raz
         user.setResetToken(null);
         user.setResetTokenExpiryDate(null);
 
@@ -100,7 +85,6 @@ public class AuthService {
             return "ROLE_USER"; // Domyślna rola
         }
 
-        // Normalizuj nazwę roli (wielkie litery, prefix ROLE_)
         String normalized = requestedRole.toUpperCase().trim();
 
         if (!normalized.startsWith("ROLE_")) {

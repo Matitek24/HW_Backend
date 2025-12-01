@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface ProjektRepository extends JpaRepository<Projekt, UUID> {
     List<Projekt> findAllByOrderByCreatedAtDesc();
+
     @Query("SELECT p FROM Projekt p LEFT JOIN FETCH p.klient ORDER BY p.createdAt DESC")
     List<Projekt> findAllWithKlient();
 }

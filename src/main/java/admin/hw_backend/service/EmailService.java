@@ -57,7 +57,7 @@ public class EmailService {
                 </html>
                 """.formatted(name, magicLink, magicLink);
 
-            helper.setText(htmlContent, true); // true = HTML
+            helper.setText(htmlContent, true);
 
             mailSender.send(message);
             log.info("Wysłano email z projektem do: {}", recipientEmail);
@@ -66,4 +66,46 @@ public class EmailService {
             log.error("Błąd wysyłania maila do: " + recipientEmail, e);
         }
     }
+
+    @Async
+    public void sendPasswordResetLink(String recipientEmail, String token) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom(senderEmail);
+            helper.setTo(recipientEmail);
+            helper.setSubject("Reset hasła - HEADWEAR Configurator");
+
+            String resetLink = frontendUrl + "/reset-password?token=" + token;
+
+            String htmlContent = """
+                <html>
+                <body style="font-family: Arial, sans-serif;">
+                    <h2>Zresetuj swoje hasło</h2>
+                    <p>Otrzymaliśmy prośbę o zmianę hasła do Twojego konta administratora.</p>
+                    <p>Aby ustawić nowe hasło, kliknij w poniższy przycisk (link wygaśnie za 15 minut):</p>
+                    <br>
+                    <a href="%s" style="background-color: #dc2626; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                        Zresetuj Hasło
+                    </a>
+                    <br><br>
+                    <p>Jeśli przycisk nie działa, skopiuj ten link do przeglądarki:</p>
+                    <p>%s</p>
+                    <hr>
+                    <p style="font-size: 12px; color: gray;">Jeśli to nie Ty prosiłeś o zmianę hasła, zignoruj tę wiadomość.</p>
+                </body>
+                </html>
+                """.formatted(resetLink, resetLink);
+
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+            log.info("Wysłano link resetujący hasło do: {}", recipientEmail);
+
+        } catch (MessagingException e) {
+            log.error("Błąd wysyłania maila resetującego do: " + recipientEmail, e);
+        }
+    }
+
 }
