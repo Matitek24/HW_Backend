@@ -18,7 +18,6 @@ public class Wzor {
     @Column(nullable = false)
     private String nazwa;
 
-    // Usuwamy @Lob. Hibernate 6+ w Postgresie świetnie radzi sobie z TEXT bez tego.
     @Column(name = "kod_svg", nullable = false, columnDefinition = "TEXT")
     private String kodSvg;
 

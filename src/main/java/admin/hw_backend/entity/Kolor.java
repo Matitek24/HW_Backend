@@ -19,8 +19,7 @@ public class Kolor {
     private String nazwa;
 
     @Column(nullable = false, length = 7)
-    private String hex; // np. #FFFFFF
+    private String hex;
 
-    // Opcjonalnie: typ (np. "POMPON", "PRZEDZA"), jeśli chcesz filtrować
-    // private String typ;
+
 }

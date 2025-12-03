@@ -44,6 +44,7 @@ public class HatConfiguration implements Serializable {
     @Data
     public static class PomponConfig implements Serializable {
         private static final long serialVersionUID = 1L;
+        private Boolean show = true;
         private String p1;
         private String p2;
         private String p3;
