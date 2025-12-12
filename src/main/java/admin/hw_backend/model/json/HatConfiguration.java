@@ -9,6 +9,7 @@ public class HatConfiguration implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private String customLogo;
     private TextConfig text;
     private BaseConfig base;
     private PatternConfig pattern;
