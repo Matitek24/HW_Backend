@@ -3,6 +3,7 @@ package admin.hw_backend.config;
 import admin.hw_backend.security.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value; // Import
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,10 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    // Wstrzykiwanie zmiennej z application.properties
+    @Value("${app.cors.allowed-origins:http://localhost:5173}") // Domyślnie localhost jeśli brak zmiennej
+    private String allowedOrigins;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -38,19 +43,15 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
-                                "/api/auth/register",
-                                "/api/auth/login",
-                                "/api/auth/register-admin",
+                                "/api/auth/**",      // Uproszczenie: wszystko co w auth jest publiczne
                                 "/api/public/**",
-                                "/api/auth/forgot-password",
-                                "/api/auth/reset-password",
-                                "/api/public/project",
-                                "/"
+                                "/error"             // Ważne: pozwala Springowi wyświetlić błędy bez 403
                         ).permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // Pamiętaj o prefiksie ROLE_ w bazie!
                         .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
+                // ... reszta obsługi wyjątków bez zmian ...
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -75,7 +76,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173")
+                        .allowedOrigins(allowedOrigins.split(",")) // Dynamiczne origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                         .allowedHeaders("*")
                         .exposedHeaders("Authorization")
@@ -85,6 +86,7 @@ public class SecurityConfig {
         };
     }
 
+    // ... reszta beanów (passwordEncoder, authenticationManager) bez zmian
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
