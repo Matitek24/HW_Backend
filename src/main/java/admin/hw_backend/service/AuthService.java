@@ -35,7 +35,6 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setHaslo(passwordEncoder.encode(request.getHaslo()));
 
-        // Przypisz rolę
         String roleName = determineRoleName(request.getRola());
         Role role = roleRepository.findByNazwaRoli(roleName)
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono roli: " + roleName));
@@ -82,7 +81,7 @@ public class AuthService {
 
     private String determineRoleName(String requestedRole) {
         if (requestedRole == null || requestedRole.isBlank()) {
-            return "ROLE_USER"; // Domyślna rola
+            return "ROLE_USER";
         }
 
         String normalized = requestedRole.toUpperCase().trim();

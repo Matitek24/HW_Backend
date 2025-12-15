@@ -28,7 +28,6 @@ public class AdminController {
     @PatchMapping("/projects/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateProjectStatus(@PathVariable UUID id, @RequestBody String newStatus) {
-        // newStatus może przyjść w cudzysłowach (np. "W_REALIZACJI"), więc warto go oczyścić
         String statusClean = newStatus.replace("\"", "");
 
         Projekt projekt = projektRepository.findById(id)
