@@ -1,4 +1,4 @@
-# Headwear Designer - Backend API
+# Headwear Konfigurator - Backend API
 
 Stabilna i bezpieczna warstwa serwerowa dla konfiguratora produktów. System zarządza logiką biznesową, bezpieczną autoryzacją użytkowników oraz automatyzacją procesów produkcyjnych.
 
