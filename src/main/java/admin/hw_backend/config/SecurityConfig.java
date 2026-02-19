@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/**",      // Uproszczenie: wszystko co w auth jest publiczne
                                 "/api/public/**",
+                                "/api/ai/**",
                                 "/error"             // Ważne: pozwala Springowi wyświetlić błędy bez 403
                         ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // Pamiętaj o prefiksie ROLE_ w bazie!
