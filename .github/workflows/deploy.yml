@@ -1,0 +1,23 @@
+name: Deploy to VPS Production
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Łączenie z serwerem i restart Dockera
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            # WAŻNE: podmień poniższą ścieżkę na tę, gdzie masz projekt na VPS-ie!
+            cd /var/www/hw_backend
+            git pull origin production
+            docker-compose up -d --build
