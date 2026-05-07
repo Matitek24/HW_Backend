@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 @Service
@@ -31,7 +32,8 @@ public class EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom(senderEmail);
+            helper.setFrom(senderEmail, "System Headwear");
+            helper.setReplyTo("programista@salemstudio.pl");
             helper.setTo(recipientEmail);
             helper.setSubject("Twoja wizualizacja HEADWEAR - Projekt #" + projectId.toString().substring(0, 8));
 
@@ -106,6 +108,8 @@ public class EmailService {
 
         } catch (MessagingException e) {
             log.error("Błąd wysyłania maila do: " + recipientEmail, e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 
