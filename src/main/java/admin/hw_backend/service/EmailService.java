@@ -35,7 +35,15 @@ public class EmailService {
             helper.setTo(recipientEmail);
             helper.setSubject("Twoja wizualizacja HEADWEAR - Projekt #" + projectId.toString().substring(0, 8));
 
-            String magicLink = frontendUrl + "/projekt/" + projectId;
+            String cleanUrl = frontendUrl.trim();
+            if (cleanUrl.endsWith("/")) {
+                cleanUrl = cleanUrl.substring(0, cleanUrl.length() - 1);
+            }
+            if (cleanUrl.endsWith("/api")) {
+                cleanUrl = cleanUrl.substring(0, cleanUrl.length() - 4);
+            }
+
+            String magicLink = cleanUrl + "/projekt/" + projectId;
 
             String htmlContent = """
                 <!DOCTYPE html>
