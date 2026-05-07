@@ -17,7 +17,11 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
           script: |
-            # WAŻNE: podmień poniższą ścieżkę na tę, gdzie masz projekt na VPS-ie!
-            cd /var/www/hw_backend
+            # 1. Wejście do poprawnego folderu z projektem
+            cd /home/mateusz/hw_app
+            
+            # 2. Pobranie najnowszego kodu z gałęzi production
             git pull origin production
-            docker-compose up -d --build
+            
+            # 3. Przebudowanie i uruchomienie Dockera
+            docker compose up -d --build
