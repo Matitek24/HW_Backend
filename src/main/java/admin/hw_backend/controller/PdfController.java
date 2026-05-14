@@ -1,6 +1,7 @@
 package admin.hw_backend.controller;
 
 import admin.hw_backend.service.EmailService;
+import admin.hw_backend.service.LeadTrackerService;
 import admin.hw_backend.service.RateLimitingService;
 import io.github.bucket4j.Bucket;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ public class PdfController {
 
     private final EmailService emailService;
     private final RateLimitingService rateLimitingService;
+    private final LeadTrackerService leadTrackerService;
 
     @PostMapping("/send-pdf")
     public ResponseEntity<?> handlePdfSend(
@@ -41,6 +43,8 @@ public class PdfController {
 
                 try {
                     emailService.sendPdfVisualization(email, file.getBytes(), file.getOriginalFilename(), projectId);
+                    leadTrackerService.recordPdfDownload(email);
+
                     return ResponseEntity.ok().build();
                 } catch (IOException e) {
                     return ResponseEntity.internalServerError().body("Błąd odczytu pliku");
