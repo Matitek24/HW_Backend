@@ -26,8 +26,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    // pipeline work
-    //sprawdzamy
+
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Value("${app.cors.allowed-origins:http://localhost:5173}")
@@ -50,7 +49,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
-                // ... reszta obsługi wyjątków bez zmian ...
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -85,7 +83,6 @@ public class SecurityConfig {
         };
     }
 
-    // ... reszta beanów (passwordEncoder, authenticationManager) bez zmian
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

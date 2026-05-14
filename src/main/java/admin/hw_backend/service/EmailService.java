@@ -5,10 +5,12 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
@@ -196,6 +198,81 @@ public class EmailService {
 
         } catch (MessagingException e) {
             log.error("Błąd wysyłania maila resetującego do: " + recipientEmail, e);
+        }
+
+    }
+    @Async
+    public void sendPdfVisualization(String recipientEmail, byte[] pdfBytes, String originalFileName, UUID projectId) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom(senderEmail, "System Headwear");
+            helper.setReplyTo("programista@salemstudio.pl");
+            helper.setTo(recipientEmail);
+            helper.setSubject("Twoja wizualizacja HEADWEAR - plik PDF");
+
+            String cleanUrl = frontendUrl.trim();
+            if (cleanUrl.endsWith("/")) {
+                cleanUrl = cleanUrl.substring(0, cleanUrl.length() - 1);
+            }
+            if (cleanUrl.endsWith("/api")) {
+                cleanUrl = cleanUrl.substring(0, cleanUrl.length() - 4);
+            }
+            String magicLink = cleanUrl + "/projekt/" + (projectId != null ? projectId.toString() : "");
+
+            String htmlContent = """
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                </head>
+                <body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                    <table width="100%%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 40px 20px; margin-top:40px; margin-bottom:40px;">
+                        <tr>
+                            <td align="center">
+                                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <tr>
+                                        <td style="padding: 40px 30px;">
+                                            <h1 style="margin: 0 0 20px 0; color: #1f2937; font-size: 24px; font-weight: 600;">
+                                                Twoja wizualizacja jest gotowa!
+                                            </h1>
+                                            <p style="margin: 0 0 15px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                                W załączniku do tej wiadomości znajdziesz wygenerowany plik PDF z projektem Twojej czapki.
+                                            </p>
+    
+                                         
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 20px 30px; background-color: #f9fafb; border-top: 1px solid #e5e7eb; border-radius: 0 0 8px 8px;">
+                                            <p style="margin: 0; color: #9ca3af; font-size: 12px; text-align: center;">
+                                                Wiadomość wygenerowana automatycznie przez system HEADWEAR
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
+                """.formatted(magicLink);
+
+            helper.setText(htmlContent, true);
+
+            // DODANIE ZAŁĄCZNIKA - To jest ta najważniejsza linijka
+            String fileName = (originalFileName != null && !originalFileName.isEmpty())
+                    ? originalFileName
+                    : "Wizualizacja_Headwear.pdf";
+            helper.addAttachment(fileName, new ByteArrayResource(pdfBytes));
+
+            mailSender.send(message);
+            log.info("Wysłano email z załącznikiem PDF do: {}", recipientEmail);
+
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            log.error("Błąd wysyłania maila z plikiem PDF do: " + recipientEmail, e);
         }
     }
 }
