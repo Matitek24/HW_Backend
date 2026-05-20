@@ -15,7 +15,7 @@ public class HatConfiguration implements Serializable {
     private PatternConfig pattern;
     private PomponConfig pompons;
     private PatternsSelection patterns;
-
+    private LogoConfig logo;
 
     @Data
     public static class TextConfig implements Serializable {
@@ -57,5 +57,15 @@ public class HatConfiguration implements Serializable {
         private static final long serialVersionUID = 1L;
         private Long top;
         private Long bottom;
+    }
+
+    @Data
+    public static class LogoConfig implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private String url;
+        private String originalName;
+        private Double scale;
+        private Double x;
+        private Double y;
     }
 }
