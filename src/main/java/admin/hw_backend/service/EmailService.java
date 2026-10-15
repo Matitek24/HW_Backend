@@ -34,7 +34,9 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setFrom(senderEmail, "System Konfigurator");
-            InternetAddress[] replyTo = InternetAddress.parse("julia@headwear.com.pl, marcin.jedrzejczyk@headwear.com.pl");
+            // USTAWIENIE DWÓCH ADRESÓW REPLY-TO Z IMIONAMI I NAZWISKAMI
+            String replyToNames = "Julia <julia@headwear.com.pl>, Marcin <marcin.jedrzejczyk@headwear.com.pl>";
+            InternetAddress[] replyTo = InternetAddress.parse(replyToNames);
             message.setReplyTo(replyTo);
             helper.setTo(recipientEmail);
             helper.setSubject("Twoja wizualizacja - Projekt #" + projectId.toString().substring(0, 8));
