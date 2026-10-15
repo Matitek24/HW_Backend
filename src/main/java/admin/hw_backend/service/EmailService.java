@@ -32,10 +32,9 @@ public class EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom(senderEmail, "System Headwear");
-            helper.setReplyTo("programista@salemstudio.pl");
+            helper.setFrom(senderEmail, "System Konfigurator");
             helper.setTo(recipientEmail);
-            helper.setSubject("Twoja wizualizacja HEADWEAR - Projekt #" + projectId.toString().substring(0, 8));
+            helper.setSubject("Twoja wizualizacja - Projekt #" + projectId.toString().substring(0, 8));
 
             String cleanUrl = frontendUrl.trim();
             if (cleanUrl.endsWith("/")) {
@@ -65,7 +64,7 @@ public class EmailService {
                                                 Witaj %s!
                                             </h1>
                                             <p style="margin: 0 0 15px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
-                                                Dziękujemy za stworzenie projektu w konfiguratorze HEADWEAR.
+                                                Dziękujemy za stworzenie projektu w konfiguratorze.
                                             </p>
                                             <p style="margin: 0 0 30px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
                                                 Twoja konfiguracja została zapisana. Możesz do niej wrócić w każdej chwili:
@@ -79,7 +78,7 @@ public class EmailService {
                                                     </td>
                                                 </tr>
                                             </table>
-                                            <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; border-left: 3px solid #1f2937;">
+                                            <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px;">
                                                 <p style="margin: 0; color: #6b7280; font-size: 13px;">
                                                     <strong>Link do projektu:</strong><br>
                                                     <a href="%s" style="color: #1f2937; word-break: break-all;">%s</a>
@@ -90,7 +89,7 @@ public class EmailService {
                                     <tr>
                                         <td style="padding: 20px 30px; background-color: #f9fafb; border-top: 1px solid #e5e7eb; border-radius: 0 0 8px 8px;">
                                             <p style="margin: 0; color: #9ca3af; font-size: 12px; text-align: center;">
-                                                Wiadomość wygenerowana automatycznie przez system HEADWEAR
+                                                Wiadomość wygenerowana automatycznie przez system
                                             </p>
                                         </td>
                                     </tr>
@@ -121,7 +120,7 @@ public class EmailService {
 
             helper.setFrom(senderEmail);
             helper.setTo(recipientEmail);
-            helper.setSubject("Reset hasła - HEADWEAR Configurator");
+            helper.setSubject("Reset hasła - Configurator");
 
             String resetLink = frontendUrl + "/reset-password?token=" + token;
 
