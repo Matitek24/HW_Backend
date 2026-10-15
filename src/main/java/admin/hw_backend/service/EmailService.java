@@ -1,6 +1,7 @@
 package admin.hw_backend.service;
 
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,8 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setFrom(senderEmail, "System Konfigurator");
+            InternetAddress[] replyTo = InternetAddress.parse("julia@headwear.com.pl, marcin.jedrzejczyk@headwear.com.pl");
+            message.setReplyTo(replyTo);
             helper.setTo(recipientEmail);
             helper.setSubject("Twoja wizualizacja - Projekt #" + projectId.toString().substring(0, 8));
 
