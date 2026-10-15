@@ -35,7 +35,6 @@ public class ProjectController {
         if (file != null && !file.isEmpty()) {
             String s3Url = s3Service.uploadFile(file);
 
-
             if (request.getConfig() != null) {
                 request.getConfig().getLogo().setUrl(s3Url);
             }
