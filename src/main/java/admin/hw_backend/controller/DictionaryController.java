@@ -25,12 +25,12 @@ public class DictionaryController {
 
     @GetMapping("/colors")
     public ResponseEntity<List<Kolor>> getColors() {
-        return ResponseEntity.ok(kolorRepository.findAll());
+        return ResponseEntity.ok(kolorRepository.findAllByIsActiveTrue());
     }
 
     @GetMapping("/patterns")
     public ResponseEntity<List<Wzor>> getPatterns() {
-        return ResponseEntity.ok(wzorRepository.findAll());
+        return ResponseEntity.ok(wzorRepository.findAllByIsActiveTrue());
     }
 
     @GetMapping("/fonts")

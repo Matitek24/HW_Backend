@@ -24,5 +24,8 @@ public class Wzor {
     @Column(nullable = false)
     private String kategoria;
 
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+
     public Wzor() {}
 }

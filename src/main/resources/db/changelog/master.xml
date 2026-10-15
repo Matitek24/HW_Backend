@@ -19,6 +19,8 @@
     <include file="db/changelog/012-add-reset-token-columns.xml"/>
     <include file="db/changelog/013-cleanup-and-setup-v2.xml"/>
     <include file="db/changelog/014-lead-and-history-of-lead.xml"/>
+    <include file="db/changelog/015-isactive-flag.xml"/>
+
 
 
 

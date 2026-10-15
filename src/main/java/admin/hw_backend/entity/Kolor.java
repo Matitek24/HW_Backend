@@ -21,5 +21,6 @@ public class Kolor {
     @Column(nullable = false, length = 7)
     private String hex;
 
-
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 }

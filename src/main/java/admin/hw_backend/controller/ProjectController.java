@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
@@ -32,10 +31,10 @@ public class ProjectController {
             @RequestPart("data") ProjectRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 
+        // S3 uruchomi się tylko wtedy, gdy w żądaniu faktycznie pojawi się plik
         if (file != null && !file.isEmpty()) {
             String s3Url = s3Service.uploadFile(file);
-
-            if (request.getConfig() != null) {
+            if (request.getConfig() != null && request.getConfig().getLogo() != null) {
                 request.getConfig().getLogo().setUrl(s3Url);
             }
         }
@@ -64,8 +63,8 @@ public class ProjectController {
             @RequestPart("data") ProjectRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 
+        // Podmiana logo w S3 tylko jeśli przyszedł nowy plik
         if (file != null && !file.isEmpty()) {
-
             projektRepository.findById(uuid).ifPresent(oldProjekt -> {
                 if(oldProjekt.getKonfiguracja() != null && oldProjekt.getKonfiguracja().getLogo() != null) {
                     String oldUrl = oldProjekt.getKonfiguracja().getLogo().getUrl();

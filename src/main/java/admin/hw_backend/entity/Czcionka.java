@@ -20,4 +20,7 @@ public class Czcionka {
 
     @Column(nullable = false)
     private String wartosc;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 }
